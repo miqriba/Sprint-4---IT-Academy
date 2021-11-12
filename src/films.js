@@ -1,4 +1,4 @@
-import { movies } from './data.js';
+// import { movies } from './data.js';
 
 // Exercise 1: Get the array of all directors.
 function getAllDirectors(array) {
@@ -53,11 +53,15 @@ function orderAlphabetically(array) {
 // Exercise 5: Order by year, ascending
 function orderByYear(array) {
   let arrayTemp = [...array];
+  //les ordeno alfabeticament abans dordenarles per any
+
   arrayTemp = arrayTemp.sort(function (a, b) {
-    let textA = a.title.toUpperCase();
-    let textB = b.title.toUpperCase();
-    return textA < textB ? -1 : textA > textB ? 1 : 0;
-  }); // senzillament les ordeno alfabeticament abans dordenarles per any
+    if (a.title && b.title) {
+      let textA = a.title.toUpperCase();
+      let textB = b.title.toUpperCase();
+      return textA < textB ? -1 : textA > textB ? 1 : 0;
+    }
+  });
   arrayTemp.sort(function (a, b) {
     return a.year < b.year ? -1 : a.year > b.year ? 1 : 0;
   });
@@ -86,29 +90,30 @@ function moviesAverageByCategory(array, category) {
 function hoursToMinutes(array) {
   let newArray = [...array];
   newArray.forEach(function (el) {
-    // console.log(`Hores: ${el.duration.slice(0, el.duration.indexOf('h'))}
-    // Minuts: ${
-    //   el.duration.indexOf('min') === -1
-    //     ? 0
-    //     : el.duration.slice(
-    //         el.duration.indexOf('min') - 2,
-    //         el.duration.indexOf('min')
-    //       )
-    // }`);
+    // console.log(
+    //   `Hores: ${el.duration.slice(0, el.duration.indexOf('h'))} Minuts: ${
+    //     el.duration.indexOf('min') === -1
+    //       ? 0
+    //       : el.duration.slice(
+    //           el.duration.indexOf('min') - 2,
+    //           el.duration.indexOf('min')
+    //         )
+    //   }`
+    // );
 
     el.duration =
-      Number(el.duration.slice(0, el.duration.indexOf('h'))) * 60 +
-        el.duration.indexOf('min') ===
-      -1
+      el.duration.slice(0, el.duration.indexOf('h')) * 60 +
+      (el.duration.indexOf('min') === -1
         ? 0
         : Number(
             el.duration.slice(
               el.duration.indexOf('min') - 2,
               el.duration.indexOf('min')
             )
-          ); // si no s'especifiquen minuts (duration: '2h'), no sexecuta la suma de minuts, això és el que l'operador ternari fa
+          )); // si no s'especifiquen minuts (duration: '2h'), no sexecuta la suma de minuts, això és el que l'operador ternari fa
   });
   console.log(newArray);
+  return newArray;
 }
 
 // Exercise 8: Get the best film of a year
@@ -117,9 +122,9 @@ function bestFilmOfYear(array, year) {
   let filmsOfYear = array.filter((film) => film.year == year);
   // ⚠️ falta implementar bé què passa amb els empats, però com que en els tests no es demana ho he passat per alt de moment
   let result = filmsOfYear.reduce((a, b) =>
-    a.score > b.score ? a : a.score < b.score ? b : 0
+    a.score > b.score ? a : a.score < b.score ? b : b
   );
-  return result;
+  return [result];
 }
 
 // ⬇️ proves de funcions ⬇️
@@ -129,14 +134,15 @@ function bestFilmOfYear(array, year) {
 // moviesAverageOfDirector(movies, 'Quentin Tarantino');
 // orderAlphabetically(movies);
 // orderByYear([{ title: 'Menja merda', year: 1982 }]);
+// orderByYear(movies);
 // moviesByCategory(movies, 'Drama');
-moviesAverageByCategory(
-  [
-    { score: 5, genre: ['Action'] },
-    { score: '', genre: ['Action'] }
-  ],
-  'Action'
-);
+// moviesAverageByCategory(
+//   [
+//     { score: 5, genre: ['Action'] },
+//     { score: '', genre: ['Action'] }
+//   ],
+//   'Action'
+// );
 // hoursToMinutes(movies);
 // hoursToMinutes([{ duration: '2h' }]);
 
