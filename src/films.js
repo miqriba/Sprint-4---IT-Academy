@@ -2,8 +2,11 @@ import { movies } from './data.js';
 
 // Exercise 1: Get the array of all directors.
 function getAllDirectors(array) {
-  let directors = new Set();
-  array.forEach((el) => directors.add(el.director));
+  // inicialment ho creava com a set per no repetir directors perque pensava que era la idea de lenunciat:
+  // let directors = new Set();
+  // let directorsArray = Array.from(directors);
+  let directors = [];
+  array.forEach((el) => directors.push(el.director));
   console.log(directors);
   return directors;
 }
@@ -11,7 +14,7 @@ function getAllDirectors(array) {
 // Exercise 2: Get the films of a certain director
 function getMoviesFromDirector(array, director) {
   let result = array.filter((film) => film.director == director);
-  console.log(result);
+  // console.log(result);
   return result;
 }
 
@@ -19,11 +22,11 @@ function getMoviesFromDirector(array, director) {
 
 // ➡️ Separo en una funció el calcular l'average score d'un array de películes:
 function calculateAverageScore(array) {
-  let sum = 0;
-  let arrayOfScores = array.map((element) => element.score);
-  sum = arrayOfScores.reduce((a, b) => a + b);
-  let result = Math.round((sum * 100) / arrayOfScores.length) / 100;
-  console.log(result);
+  // let sum = 0;
+  // let arrayOfScores = array.map((element) => element.score);
+  // sum = arrayOfScores.reduce((a, b) => a + b);
+  let sum = array.map((element) => element.score).reduce((a, b) => a + b);
+  let result = Math.round((sum * 100) / array.length) / 100;
   return result;
 }
 
@@ -34,66 +37,76 @@ function moviesAverageOfDirector(array, director) {
 
 // Exercise 4:  Alphabetic order by title
 function orderAlphabetically(array) {
-  // no canviem l'array movies original: intento aplicar principis de programació funcional que he trobat
   let arrayTemp = [...array]; // shallow copy de l'array
+  arrayTemp = arrayTemp.map((el) => el.title);
   arrayTemp.sort(function (a, b) {
-    let textA = a.title.toUpperCase();
-    let textB = b.title.toUpperCase();
+    let textA = a.toUpperCase();
+    let textB = b.toUpperCase();
     return textA < textB ? -1 : textA > textB ? 1 : 0;
   });
-  // console.log(arrayTemp);
+  arrayTemp.length > 20 ? (arrayTemp = arrayTemp.slice(0, 20)) : null; // (sóc conscient que el us del ternary operator és per a ocasions on no hagi d'ometre la expressió en el cas que la condició sigui falsa com he fet aqui)
+  console.log(arrayTemp);
+  return arrayTemp;
 }
 // console.log(movies);
 
 // Exercise 5: Order by year, ascending
 function orderByYear(array) {
   let arrayTemp = [...array];
+  arrayTemp = arrayTemp.sort(function (a, b) {
+    let textA = a.title.toUpperCase();
+    let textB = b.title.toUpperCase();
+    return textA < textB ? -1 : textA > textB ? 1 : 0;
+  }); // senzillament les ordeno alfabeticament abans dordenarles per any
   arrayTemp.sort(function (a, b) {
     return a.year < b.year ? -1 : a.year > b.year ? 1 : 0;
   });
   console.log(arrayTemp);
+  return arrayTemp;
 }
+// Exercise 6: Calculate the average of the movies in a category
+// ⚠️ falta implementar: 'should return average even if one of the movies does not have score'
 
 //➡️ Separo en una funció el buscar les pelicules que tenen la categoria desitjada inclosa entre les seves categories:
 function moviesByCategory(array, category) {
   let result = array.filter((movie) =>
     movie.genre.some((element) => element === category)
   );
-  console.log(
-    `S'han trobat ${result.length} películes de la categoria ${category}:`
-  );
+  return result;
+}
+
+function moviesAverageByCategory(array, category) {
+  let result = calculateAverageScore(moviesByCategory(array, category));
   console.log(result);
   return result;
 }
 
-// Exercise 6: Calculate the average of the movies in a category
-function moviesAverageByCategory(array, category) {
-  console.log(
-    `La nota mitjana de les películes de la categoria ${category} és:`
-  );
-  return calculateAverageScore(moviesByCategory(array, category));
-}
-
 // Exercise 7: Modify the duration of movies to minutes
-console.log(movies);
+
 function hoursToMinutes(array) {
   let newArray = [...array];
   newArray.forEach(function (el) {
-    // ⚠️ inacabat
-    console.log(`Hores: ${el.duration.slice(0, el.duration.indexOf('h'))}
-    Minuts: ${el.duration.slice(
-      el.duration.indexOf('min') - 2,
-      el.duration.indexOf('min')
-    )}`);
+    // console.log(`Hores: ${el.duration.slice(0, el.duration.indexOf('h'))}
+    // Minuts: ${
+    //   el.duration.indexOf('min') === -1
+    //     ? 0
+    //     : el.duration.slice(
+    //         el.duration.indexOf('min') - 2,
+    //         el.duration.indexOf('min')
+    //       )
+    // }`);
 
     el.duration =
       Number(el.duration.slice(0, el.duration.indexOf('h'))) * 60 +
-      Number(
-        el.duration.slice(
-          el.duration.indexOf('min') - 2,
-          el.duration.indexOf('min')
-        )
-      );
+        el.duration.indexOf('min') ===
+      -1
+        ? 0
+        : Number(
+            el.duration.slice(
+              el.duration.indexOf('min') - 2,
+              el.duration.indexOf('min')
+            )
+          ); // si no s'especifiquen minuts (duration: '2h'), no sexecuta la suma de minuts, això és el que l'operador ternari fa
   });
   console.log(newArray);
 }
@@ -102,20 +115,12 @@ function hoursToMinutes(array) {
 // accepta anys en forma de string perquè he utilitzat el comparador no estricte ==
 function bestFilmOfYear(array, year) {
   let filmsOfYear = array.filter((film) => film.year == year);
-  let empats = [];
-  // ⚠️ falta implementar bé què passa amb els empats
+  // ⚠️ falta implementar bé què passa amb els empats, però com que en els tests no es demana ho he passat per alt de moment
   let result = filmsOfYear.reduce((a, b) =>
-    a.score > b.score ? a : a.score < b.score ? b : empats.push(a, b)
+    a.score > b.score ? a : a.score < b.score ? b : 0
   );
-  console.log(filmsOfYear);
-  console.log(empats);
-  console.log(result);
   return result;
 }
-
-// import * as movies from './data.js';
-
-// import * as movies from './data';
 
 // ⬇️ proves de funcions ⬇️
 
@@ -123,9 +128,18 @@ function bestFilmOfYear(array, year) {
 // getMoviesFromDirector(movies, 'Federico Fellini');
 // moviesAverageOfDirector(movies, 'Quentin Tarantino');
 // orderAlphabetically(movies);
-// orderByYear(movies);
+// orderByYear([{ title: 'Menja merda', year: 1982 }]);
 // moviesByCategory(movies, 'Drama');
+moviesAverageByCategory(
+  [
+    { score: 5, genre: ['Action'] },
+    { score: '', genre: ['Action'] }
+  ],
+  'Action'
+);
 // hoursToMinutes(movies);
+// hoursToMinutes([{ duration: '2h' }]);
+
 // bestFilmOfYear(movies, 2003);
 
 // The following is required to make unit tests work.
