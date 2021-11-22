@@ -76,7 +76,6 @@ function orderByYear(array) {
   return arrayTemp;
 }
 // Exercise 6: Calculate the average of the movies in a category
-// ⚠️ falta implementar: 'should return average even if one of the movies does not have score'
 
 //➡️ Separo en una funció el buscar les pelicules que tenen la categoria desitjada inclosa entre les seves categories:
 function moviesByCategory(array, category) {
@@ -94,30 +93,24 @@ function moviesAverageByCategory(array, category) {
 
 // Exercise 7: Modify the duration of movies to minutes
 
-function hoursToMinutes(array) {
-  let newArray = [...array];
-  newArray.forEach(function (el) {
-    // console.log(
-    //   `Hores: ${el.duration.slice(0, el.duration.indexOf('h'))} Minuts: ${
-    //     el.duration.indexOf('min') === -1
-    //       ? 0
-    //       : el.duration.slice(
-    //           el.duration.indexOf('min') - 2,
-    //           el.duration.indexOf('min')
-    //         )
-    //   }`
-    // );
+// 🛑 demanar codi debugger 🛑
 
-    el.duration =
-      el.duration.slice(0, el.duration.indexOf('h')) * 60 +
-      (el.duration.indexOf('min') === -1
+function hoursToMinutes(array) {
+  let newArray = [];
+  array.forEach(function (movie) {
+    // movie.duration =
+    let newDuration = 
+      Number(movie.duration.slice(0, movie.duration.indexOf('h'))) * 60 +
+      (movie.duration.indexOf('min') === -1
         ? 0
         : Number(
-            el.duration.slice(
-              el.duration.indexOf('min') - 2,
-              el.duration.indexOf('min')
+            movie.duration.slice(
+              movie.duration.indexOf('min') - 2,
+              movie.duration.indexOf('min')
             )
-          )); // si no s'especifiquen minuts (duration: '2h'), no sexecuta la suma de minuts, això és el que l'operador ternari fa
+          ));
+          newArray.push({...movie,duration:newDuration});
+          // si no s'especifiquen minuts (duration: '2h'), no sexecuta la suma de minuts, això és el que l'operador ternari fa
   });
   console.log(newArray);
   return newArray;
