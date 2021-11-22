@@ -22,12 +22,19 @@ function getMoviesFromDirector(array, director) {
 
 // ➡️ Separo en una funció el calcular l'average score d'un array de películes:
 function calculateAverageScore(array) {
-  // let sum = 0;
-  // let arrayOfScores = array.map((element) => element.score);
-  // sum = arrayOfScores.reduce((a, b) => a + b);
-  let sum = array.map((element) => element.score).reduce((a, b) => a + b);
-  let result = Math.round((sum * 100) / array.length) / 100;
-  return result;
+  let sumaScores = 0;
+  // let arrayOfScores = array.filter((element) =>{
+  //   if (element.score !== ''){
+  //    return element.score}}
+     
+  //    );
+  let arrayOfScores = array.map((element) => element.score);
+  
+  sumaScores = arrayOfScores.reduce((a, b) => a + b);
+
+  // let sumaScores = array.map((element) => element.score).reduce((a, b) => a + b);
+  let mitjana = Math.round((sumaScores * 100) / arrayOfScores.length) / 100;
+  return mitjana;
 }
 
 function moviesAverageOfDirector(array, director) {
@@ -74,7 +81,7 @@ function orderByYear(array) {
 //➡️ Separo en una funció el buscar les pelicules que tenen la categoria desitjada inclosa entre les seves categories:
 function moviesByCategory(array, category) {
   let result = array.filter((movie) =>
-    movie.genre.some((element) => element === category)
+    movie.genre.some((element) => element === category) && ((typeof movie.score !== 'string'))
   );
   return result;
 }
